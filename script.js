@@ -4,6 +4,9 @@ const c = canvas.getContext('2d')
 canvas.width = innerWidth
 canvas.height = innerHeight
 
+const backgroundImage = new Image()
+backgroundImage.src = './img/bg.png'
+
 class Player {
     constructor() {
         this.velocity = {
@@ -273,8 +276,7 @@ function createParticles(object, color) {
 
 function animate() {
     requestAnimationFrame(animate)
-    c.fillStyle = 'black'
-    c.fillRect(0, 0, canvas.width, canvas.height)
+    c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height)
     player.update()
 
     particles.forEach((particle, i) => {
