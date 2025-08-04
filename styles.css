@@ -22,6 +22,23 @@ p {
     font-size: 18px;
 }
 
-div {
+.game {
     position: relative; 
+}
+
+#gameOverMessage {
+  display: none;
+  position: absolute;
+  left: 0; top: 0;
+  width: 100vw; height: 100vh;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 99;
+}
+#gameOverMessage span {
+  color: white;
+  font-size: 60px;
+  font-family: sans-serif;
+  text-shadow: 2px 2px 8px #000;
 }

@@ -8,6 +8,28 @@ canvas.height = 576
 const backgroundImage = new Image()
 backgroundImage.src = './img/bg.png'
 
+const boatImage = new Image();
+boatImage.src = './img/ship.png';
+
+const planeImage = new Image();
+planeImage.src = './img/plane.png';
+
+const backgroundMusic = new Audio('./audio/bg.mp3')
+backgroundMusic.loop = true
+backgroundMusic.volume = 0.1
+
+const enemyDestroyedSound = new Audio('./audio/impact.mp3')
+enemyDestroyedSound.volume = 0.6
+
+window.addEventListener('DOMContentLoaded', () => {
+    backgroundMusic.play().catch(() => {
+
+        window.addEventListener('keydown', () => {
+            backgroundMusic.play()
+        }, { once: true })
+    })
+})
+
 class Player {
     constructor() {
         this.velocity = {
@@ -283,10 +305,30 @@ function createParticles(object, color) {
     }
 }
 
+let planeX = -100;
+const planeY = 200;
+const planeSpeed = 2;
+let planeWaiting = false;
+
 function animate() {
     if (!game.active) return
     requestAnimationFrame(animate)
     c.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height)
+    c.drawImage(boatImage, 200, 450, 30, 30);
+
+
+ if (!planeWaiting) {
+        c.drawImage(planeImage, planeX, planeY, 30, 30);
+        planeX += planeSpeed;
+
+        if (planeX > canvas.width) {
+            planeWaiting = true;
+            setTimeout(() => {
+                planeX = -80;
+                planeWaiting = false;
+            }, 9000);
+        }
+    }
     player.update()
 
     particles.forEach((particle, i) => {
@@ -322,6 +364,9 @@ function animate() {
                 setTimeout(() => {
                     game.over = true
                     game.active = false
+                    backgroundMusic.pause()
+                    backgroundMusic.currentTime = 0
+                    document.getElementById('gameOverMessage').style.display = 'flex';
                 }, 2000)
             }, 0)
         }
@@ -363,8 +408,8 @@ function animate() {
                         // remove invader and projectiles
                         if (invaderFound && projectileFound) {
                             score += 100
-
                             scoreEl.innerHTML = score
+                            enemyDestroyedSound.play()
                             createParticles(invader, 'yellow')
 
                             grid.invaders.splice(invaderIndex, 1)
